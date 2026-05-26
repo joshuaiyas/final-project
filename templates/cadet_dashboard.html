@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="content" style="padding: 30px;">
+  <h2>Welcome, Cadet {{ name }}!</h2>
+  <p style="color: #555;">BatStateU ROTC Cadets Portal</p>
+  
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 30px;">
+    
+    <!-- Attendance Card -->
+    <div class="card">
+      <h3>📍 Attendance System</h3>
+      <p>Mark your attendance using QR Code</p>
+      <a href="{{ url_for('attendance') }}" class="btn" style="display:block; text-align:center; margin-top:10px;">
+        Open QR Scanner
+      </a>
+    </div>
+
+    <!-- Grades Card -->
+    <div class="card">
+      <h3>📊 My Grades</h3>
+      <p>View your academic performance and average</p>
+      <a href="{{ url_for('grades') }}" class="btn" style="display:block; text-align:center; margin-top:10px;">
+        View Grades
+      </a>
+    </div>
+
+    <!-- Activities Card -->
+    <div class="card">
+      <h3>🏅 Activities & Points</h3>
+      <p>Track your ROTC activities and merit points</p>
+      <a href="{{ url_for('activities') }}" class="btn" style="display:block; text-align:center; margin-top:10px;">
+        View Activities
+      </a>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

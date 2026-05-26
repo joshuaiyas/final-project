@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="content">
+  <h2>🏅 My Activities</h2>
+  <h3>Total Merit Points: <strong style="color:#c8102e;">{{ total_points }}</strong></h3>
+
+  {% if activities %}
+    <table border="1" cellpadding="12" style="width:100%; border-collapse:collapse;">
+      <tr style="background:#c8102e; color:white;">
+        <th>Date</th>
+        <th>Activity</th>
+        <th>Points</th>
+      </tr>
+      {% for act in activities %}
+      <tr>
+        <td>{{ act.date.strftime('%Y-%m-%d') }}</td>
+        <td>{{ act.activity_name }}</td>
+        <td><strong>+{{ act.points }}</strong></td>
+      </tr>
+      {% endfor %}
+    </table>
+  {% else %}
+    <p>No activities recorded yet.</p>
+  {% endif %}
+
+  <a href="{{ url_for('dashboard') }}" class="btn" style="margin-top:15px;">← Back to Dashboard</a>
+</div>
+{% endblock %}

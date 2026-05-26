@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="content" style="padding: 30px;">
+  <h2>📍 Attendance System</h2>
+  <p>Scan the QR Code provided by your Commandant to mark your attendance.</p>
+
+  <button onclick="startScanner()" class="btn" style="font-size: 18px; padding: 15px 25px; margin: 15px 0;">
+    📷 Open Camera Scanner
+  </button>
+
+  <div id="scanner-container" style="display: none; margin: 20px 0; text-align: center;">
+    <div id="reader" style="width: 100%; max-width: 400px; margin: auto;"></div>
+    <br>
+    <button onclick="stopScanner()" class="btn">Stop Scanner</button>
+  </div>
+
+  <h3>My Attendance History</h3>
+  {% if records %}
+    <table border="1" cellpadding="12" style="width:100%; border-collapse: collapse; background: white;">
+      <tr style="background: #c8102e; color: white;">
+        <th>Date & Time</th>
+        <th>Class</th>
+        <th>Status</th>
+      </tr>
+      {% for record in records %}
+      <tr>
+        <td>{{ record.timestamp.strftime('%Y-%m-%d %I:%M %p') }}</td>
+        <td>
+          {% if classes %}
+            {{ classes | selectattr('id', 'equalto', record.class_id) | first | attr('subject') }}
+          {% else %}
+            Class {{ record.class_id }}
+          {% endif %}
+        </td>
+        <td style="color: green; font-weight: bold;">{{ record.status }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  {% else %}
+    <p>No attendance records yet.</p>
+  {% endif %}
+
+  <br>
+  <a href="{{ url_for('dashboard') }}" class="btn">← Back to Dashboard</a>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<script>
+let html5QrCode;
+
+function startScanner() {
+  document.getElementById('scanner-container').style.display = 'block';
+  html5QrCode = new Html5Qrcode("reader");
+
+  html5QrCode.start(
+    { facingMode: "environment" },
+    { fps: 10, qrbox: { width: 250, height: 250 } },
+    (decodedText) => {
+      fetch('/scan_qr', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ qr_data: decodedText })
+      })
+      .then(response => response.json())
+      .then(data => {
+        alert(data.message);
+        if (data.success) {
+          stopScanner();
+          location.reload(); // Refresh to show new record
+        }
+      });
+    }
+  ).catch(err => console.error(err));
+}
+
+function stopScanner() {
+  if (html5QrCode) html5QrCode.stop();
+  document.getElementById('scanner-container').style.display = 'none';
+}
+</script>
+{% endblock %} 

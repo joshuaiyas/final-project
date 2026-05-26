@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="content">
+  <h2>📷 Attendance Scanner</h2>
+  
+  <button onclick="startScanner()" class="btn" style="font-size:18px; padding:15px 25px;">
+    Open Camera to Scan QR Code
+  </button>
+
+  <div id="scanner" style="display:none; margin:20px 0; text-align:center;">
+    <div id="reader" style="width:100%; max-width:400px; margin:auto;"></div>
+    <button onclick="stopScanner()" style="margin-top:10px;">Stop Scanner</button>
+  </div>
+
+  <h3>My Attendance History</h3>
+  {% if records %}
+    <table border="1" cellpadding="10" style="width:100%; border-collapse:collapse;">
+      <tr><th>Date & Time</th><th>Class</th><th>Status</th></tr>
+      {% for record in records %}
+      <tr>
+        <td>{{ record.timestamp.strftime('%Y-%m-%d %I:%M %p') }}</td>
+        <td>{{ classes | selectattr('id', 'equalto', record.class_id) | first | attr('subject') }}</td>
+        <td style="color:green;">{{ record.status }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  {% else %}
+    <p>No attendance records yet.</p>
+  {% endif %}
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<script>
+let html5QrCode;
+function startScanner() {
+  document.getElementById('scanner').style.display = 'block';
+  html5QrCode = new Html5Qrcode("reader");
+  
+  html5QrCode.start(
+    { facingMode: "environment" },
+    { fps: 10, qrbox: { width: 250, height: 250 } },
+    (decodedText) => {
+      fetch('/scan_qr', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ qr_data: decodedText })
+      })
+      .then(res => res.json())
+      .then(data => {
+        alert(data.message);
+        if (data.success) stopScanner();
+      });
+    }
+  );
+}
+
+function stopScanner() {
+  if (html5QrCode) html5QrCode.stop();
+  document.getElementById('scanner').style.display = 'none';
+}
+</script>
+{% endblock %}

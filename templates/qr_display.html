@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="content">
+  <div class="card" style="text-align:center;">
+    <h2>QR Code Generated Successfully</h2>
+    <h3>{{ class_info.subject }}</h3>
+    <p>{{ class_info.professor }} • {{ class_info.schedule }}</p>
+    
+    <img src="{{ qr_url }}" alt="QR Code" 
+         style="width:320px; height:320px; border:3px solid #c8102e; padding:10px; margin:20px 0;">
+    
+    <br>
+    <p><strong>Show this QR Code to cadets to scan.</strong></p>
+    
+    <a href="{{ url_for('dashboard') }}" class="btn">Back to Dashboard</a>
+  </div>
+</div>
+{% endblock %}

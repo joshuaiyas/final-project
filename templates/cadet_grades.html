@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="content">
+  <h2>📊 My Grades</h2>
+  <h3>Overall Average: <strong style="color:#c8102e;">{{ average }}</strong></h3>
+
+  <table border="1" cellpadding="12" style="width:100%; border-collapse:collapse;">
+    <tr style="background:#c8102e; color:white;">
+      <th>Subject</th>
+      <th>Grade</th>
+      <th>Remarks</th>
+    </tr>
+    {% for g in grades %}
+    <tr>
+      <td>{{ g.subject }}</td>
+      <td><strong>{{ g.grade }}</strong></td>
+      <td>{{ 'Excellent' if g.grade >= 90 else 'Good' if g.grade >= 85 else 'Satisfactory' }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+
+  <a href="{{ url_for('dashboard') }}" class="btn" style="margin-top:15px;">← Back to Dashboard</a>
+</div>
+{% endblock %}

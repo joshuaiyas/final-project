@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="content">
+  <h2>📊 All Recorded Attendance</h2>
+  
+  <a href="{{ url_for('dashboard') }}" class="btn" style="margin-bottom:15px;">← Back to Dashboard</a>
+
+  {% if records %}
+    <table border="1" cellpadding="12" style="width:100%; border-collapse:collapse; background:white;">
+      <thead>
+        <tr style="background:#c8102e; color:white;">
+          <th>Date & Time</th>
+          <th>Cadet Name</th>
+          <th>Class</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for record, cadet_name, class_subject in records %}
+        <tr>
+          <td>{{ record.timestamp.strftime('%Y-%m-%d %I:%M %p') }}</td>
+          <td><strong>{{ cadet_name }}</strong></td>
+          <td>{{ class_subject }}</td>
+          <td style="color:green; font-weight:bold;">{{ record.status }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>No attendance records found yet.</p>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<div style="height:80vh; display:flex; align-items:center; justify-content:center;">
+  <div class="card" style="width:380px; text-align:center;">
+    <h1>BatStateU</h1>
+    <h2>Cadets Portal</h2>
+    <p>ROTC Attendance System</p>
+    
+    <form method="POST">
+      <input type="text" name="user_id" placeholder="Cadet ID or Admin ID" style="width:100%; padding:12px; margin:10px 0;" required>
+      <input type="password" name="password" placeholder="Password (any)" value="123" style="width:100%; padding:12px; margin:10px 0;" required>
+      <button type="submit" style="width:100%;">Login</button>
+    </form>
+  </div>
+</div>
+{% endblock %}
